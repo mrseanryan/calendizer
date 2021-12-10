@@ -20,6 +20,7 @@ calendize.py 2022 my-12-images temp --dpi 150 --borderColor blue
 from calendar import month
 from optparse import OptionParser
 import os
+from pathlib import Path
 
 import _date_utils
 import _figure_renderer
@@ -81,7 +82,9 @@ def generate_output_image_filename(input_image_path, month, year):
     input_image_name = os.path.basename(input_image_path)
     month_2_digits = f"{month:02d}"
     month_name = _date_utils.month_name(month)
-    return f"{year}-{month_2_digits}-{month_name}--{input_image_name}"
+    output_filename = f"{year}-{month_2_digits}-{month_name}--{input_image_name}"
+    # output to PNG since repeatedly saving JPG will affect quality
+    return Path(output_filename).with_suffix('.png')
 
 files = get_input_files(INPUTDIR)
 files_count = len(files)
