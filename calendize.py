@@ -16,6 +16,7 @@ calendize.py 2022 my-12-images temp --dpi 150 --bordercolor blue
 """
 from calendar import month
 from optparse import OptionParser
+import os
 
 import _date_utils
 import _figure_renderer
@@ -47,24 +48,50 @@ OUTDIR = args[2]
 DPI = options.dpi
 BORDER_COLOR = options.bordercolor
 
-# TODO - Sort the images by name, to let user decide which is for which month...
-
 from os import listdir
 from os.path import isfile, join
+from PIL import Image
 
 def is_supported_file_type(filepath):
     file_extensions = [".jpg", ".jpeg", ".png"]
     return any(map(lambda ext: filepath.endswith(ext), file_extensions))
 
-files = [f for f in listdir(INPUTDIR) if isfile(join(INPUTDIR, f) and is_supported_file_type(f))]
+def get_input_files(input_dir):
+    # Assumption: files are soted already - this allows user to decide which is for which month...
+    files = [f for f in listdir(input_dir) if isfile(join(input_dir, f)) and is_supported_file_type(f)]
+    files = map((lambda f: join(input_dir, f)), files)
+    return list(files)
 
-print(files)
+# TODO xxx want bottom-right... margins from cmd line with default (50, 50)
+def calculate_offset_for(calender_image, background_image):
+    return (10, 10)
 
+def paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path):
+    calender_image = Image.open(calendar_image_file_path)
+    background_image = Image.open(input_image_path)
+    background_image.paste(calender_image, calculate_offset_for(calender_image, background_image)) 
+    background_image.save(output_image_path) 
+
+def generate_output_image_filename(input_image_path, month, year):
+    input_image_name = os.path.basename(input_image_path)
+    month_2_digits = f"{month:02d}"
+    month_name = _date_utils.month_name(month)
+    return f"{year}-{month_2_digits}-{month_name}--{input_image_name}"
+
+files = get_input_files(INPUTDIR)
+files_count = len(files)
+if (files_count != 12):
+    print(f"The input folder '{INPUTDIR}' should contain 12 images but found {files_count}")
+    exit(3)
 
 # 1 = January
 for month in range(1, 12 + 1):
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
-    image_file_path = _figure_renderer.render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI)
-    print(f" - saved to {image_file_path} [OK]")
+    calendar_image_file_path = _figure_renderer.render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI)
+    print(f" - calendar table saved to {calendar_image_file_path} [OK]")
+    input_image_path = files[month - 1]
+    output_image_path = os.path.join(OUTDIR, generate_output_image_filename(input_image_path, month, YEAR))
+    paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path)
+    print(f" - calendized image saved to {output_image_path} [OK]")
 
 print("[done]")

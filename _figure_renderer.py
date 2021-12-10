@@ -15,7 +15,6 @@ def render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI):
     title_text = _calendar_model.get_month_title(month, YEAR)
 
     month_2_digits = f"{month:02d}"
-    # TODO use the original image name as a suffix
     outpath = os.path.join(OUTDIR, f"{YEAR}-{month_2_digits}-{_date_utils.month_name(month)}.png")
 
     render(cell_text, column_headers, title_text, BORDER_COLOR, DPI, outpath)
@@ -30,7 +29,8 @@ def render(cell_text, column_headers, title_text, border_color, dpi, outpath):
     # with an explicit figsize here can produce better outcome.
     plt.figure(linewidth=2,
             tight_layout={'pad': 0.1},
-            figsize=(3, 2)
+            figsize=(3, 2),
+            edgecolor=border_color
             )
     # Add a table at the bottom of the axes
     the_table = plt.table(cellText=cell_text,
