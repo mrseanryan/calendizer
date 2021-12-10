@@ -1,12 +1,12 @@
-# calgen README
+# calendizer README
 
 Takes a set of 12 images and outputs new images with calendar overlays.
 
-A fast way to make your own calendar for printing.
+A quick way to make your own calendar for printing.
 
 ## Usage
 
-`calgen.py <path to directory with 12 images> <path to output directory>`
+`calendizer.py <path to directory with 12 images> <path to output directory>`
 
 xxx
 
