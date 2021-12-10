@@ -1,7 +1,7 @@
 """
-Renders images of calendar tables - one for each month. The table-images could be used to paste onto suitable photos.
+Takes 12 images and outputs copies that have calender-month table pasted onto them.
 
-Usage: render_calendar_tables.py <year> <path to output directory> [options]
+Usage: calendize.py <year> <path to input images> <path to output directory> [options]
 
 The options are:
 [-b --bordercolor - The color of the table borders]
@@ -9,10 +9,10 @@ The options are:
 [-h --help]
 
 Examples:
-render_calendar_tables.py 2022 temp
-render_calendar_tables.py 2022 temp --dpi 150
-render_calendar_tables.py 2022 temp --dpi 150 -b blue
-render_calendar_tables.py 2022 temp --dpi 150 --bordercolor blue
+calendize.py 2022 my-12-images temp
+calendize.py 2022 my-12-images temp --dpi 150
+calendize.py 2022 my-12-images temp --dpi 150 -b blue
+calendize.py 2022 my-12-images temp --dpi 150 --bordercolor blue
 """
 from calendar import month
 from optparse import OptionParser
@@ -35,7 +35,7 @@ parser.add_option('--dpi', dest='dpi', default=150,
                   help="The DPI to render (Dots Per Inch). Defaults to 150")
 
 (options, args) = parser.parse_args()
-if (len(args) != 2):
+if (len(args) != 3):
     usage()
     exit(2)
 
@@ -43,10 +43,13 @@ if (len(args) != 2):
 # pdb.set_trace()
 
 YEAR = int(args[0])
-OUTDIR = args[1]
+INPUTDIR = args[1]
+OUTDIR = args[2]
 
 DPI = options.dpi
 BORDER_COLOR = options.bordercolor
+
+# TODO - Sort the images by name, to let user decide which is for which month...
 
 # 1 = January
 for month in range(1, 12 + 1):
@@ -60,6 +63,7 @@ for month in range(1, 12 + 1):
     title_text = _calendar_model.get_month_title(month, YEAR)
 
     month_2_digits = f"{month:02d}"
+    # TODO use the original image name as a suffix
     outpath = os.path.join(OUTDIR, f"{YEAR}-{month_2_digits}-{_date_utils.month_name(month)}.png")
 
     figure = _figure_renderer.render(cell_text, column_headers, title_text, BORDER_COLOR, DPI, outpath)
