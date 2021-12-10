@@ -93,10 +93,10 @@ if (files_count != 12):
 for month in range(1, 12 + 1):
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
     calendar_image_file_path = _figure_renderer.render_table_for_month(month, YEAR, OUTDIR, options.borderColor, options.dpi)
-    print(f" - calendar table saved to {calendar_image_file_path} [OK]")
     input_image_path = files[month - 1]
     output_image_path = os.path.join(OUTDIR, generate_output_image_filename(input_image_path, month, YEAR))
     paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path, int(options.bottom_margin), int(options.right_margin))
+    os.unlink(calendar_image_file_path)
     print(f" - calendized image saved to {output_image_path} [OK]")
 
 print("[done]")
