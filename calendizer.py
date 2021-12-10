@@ -1,10 +1,11 @@
 """
-Renders image of a calendar month that can be pasted onto a photo
+Renders an image of a calendar month that could be pasted onto a photo
 """
 from calendar import month
 import os
 
 import calendar_model
+import date_utils
 import figure_renderer
 
 # config
@@ -14,17 +15,20 @@ BORDER_COLOR = 'black'
 YEAR = 2022
 
 # 1 = January
-month = 2
+for month in range(1, 12 + 1):
+    print(f"Generating {date_utils.month_name(month)} {YEAR} ...")
 
-# note: Table data needs to be non-numeric text.
-cell_text = calendar_model.get_month_data(month, YEAR)
+    # note: Table data needs to be non-numeric text.
+    cell_text = calendar_model.get_month_data(month, YEAR)
 
-print(cell_text)
+    column_headers = calendar_model.get_column_headers()
 
-column_headers = calendar_model.get_column_headers()
+    title_text = calendar_model.get_month_title(month, YEAR)
 
-title_text = calendar_model.get_month_title(month, YEAR)
+    month_2_digits = f"{month:02d}"
+    outpath = os.path.join(OUTDIR, f"{month_2_digits}-{date_utils.month_name(month)}-{YEAR}.png")
 
-outpath = os.path.join(OUTDIR, 'pyplot-table-demo.png')
+    figure = figure_renderer.render(cell_text, column_headers, title_text, BORDER_COLOR, DPI, outpath)
+    print(f" - saved to {outpath} [OK]")
 
-figure = figure_renderer.render(cell_text, column_headers, title_text, BORDER_COLOR, DPI, outpath)
+print("[done]")

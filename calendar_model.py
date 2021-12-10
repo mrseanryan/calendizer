@@ -18,9 +18,6 @@ def get_month_data(month, year):
     # Generate the calendar data for the month
     days_in_month = date_utils.days_in_month(year, month)
 
-    import pdb
-    pdb.set_trace()
-
     row = None
     for day_of_month in range(1, days_in_month + 1):
         weekday = date_utils.weekday_zero_is_monday(year, month, day_of_month)
