@@ -1,5 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+
+import _calendar_model
+import _date_utils
+
+def render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI):
+
+    # note: Table data needs to be non-numeric text.
+    cell_text = _calendar_model.get_month_data(month, YEAR)
+
+    column_headers = _calendar_model.get_column_headers()
+
+    title_text = _calendar_model.get_month_title(month, YEAR)
+
+    month_2_digits = f"{month:02d}"
+    # TODO use the original image name as a suffix
+    outpath = os.path.join(OUTDIR, f"{YEAR}-{month_2_digits}-{_date_utils.month_name(month)}.png")
+
+    render(cell_text, column_headers, title_text, BORDER_COLOR, DPI, outpath)
+    return outpath
 
 def render(cell_text, column_headers, title_text, border_color, dpi, outpath):
     # Get some lists of color specs for column headers

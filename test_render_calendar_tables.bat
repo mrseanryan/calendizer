@@ -2,7 +2,7 @@
 
 SETLOCAL
 
-SET _IMAGE=temp\02-February-2022.png
+SET _IMAGE=temp\2022-02-February.png
 
 IF EXIST %_IMAGE% (del %_IMAGE%)
 del .\temp\*.png

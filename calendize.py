@@ -16,9 +16,7 @@ calendize.py 2022 my-12-images temp --dpi 150 --bordercolor blue
 """
 from calendar import month
 from optparse import OptionParser
-import os
 
-import _calendar_model
 import _date_utils
 import _figure_renderer
 
@@ -51,22 +49,22 @@ BORDER_COLOR = options.bordercolor
 
 # TODO - Sort the images by name, to let user decide which is for which month...
 
+from os import listdir
+from os.path import isfile, join
+
+def is_supported_file_type(filepath):
+    file_extensions = [".jpg", ".jpeg", ".png"]
+    return any(map(lambda ext: filepath.endswith(ext), file_extensions))
+
+files = [f for f in listdir(INPUTDIR) if isfile(join(INPUTDIR, f) and is_supported_file_type(f))]
+
+print(files)
+
+
 # 1 = January
 for month in range(1, 12 + 1):
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
-
-    # note: Table data needs to be non-numeric text.
-    cell_text = _calendar_model.get_month_data(month, YEAR)
-
-    column_headers = _calendar_model.get_column_headers()
-
-    title_text = _calendar_model.get_month_title(month, YEAR)
-
-    month_2_digits = f"{month:02d}"
-    # TODO use the original image name as a suffix
-    outpath = os.path.join(OUTDIR, f"{YEAR}-{month_2_digits}-{_date_utils.month_name(month)}.png")
-
-    figure = _figure_renderer.render(cell_text, column_headers, title_text, BORDER_COLOR, DPI, outpath)
-    print(f" - saved to {outpath} [OK]")
+    image_file_path = _figure_renderer.render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI)
+    print(f" - saved to {image_file_path} [OK]")
 
 print("[done]")
