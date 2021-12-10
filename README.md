@@ -1,8 +1,6 @@
-# calendizer README
+# :calendar: calendizer README
 
-Takes a set of 12 images and outputs new images with calendar overlays.
-
-OR can simply generate 12 images of a calendar-table, that can be used later.
+Generates images of calendar month tables and can paste them onto suitable photos.
 
 A quick way to make your own calendar for printing.
 
