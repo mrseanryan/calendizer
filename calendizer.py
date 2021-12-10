@@ -1,27 +1,49 @@
+from calendar import month
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+
+import date_utils
 
 # config
 OUTDIR = "temp"
 DPI = 150
 BORDER_COLOR = 'black'
-TITLE_TEXT = 'January 2022'
+YEAR = 2022
 
 # fig_background_color = 'white'
 
+
+# 1 = January
+month = 1
+
+title_text = f"{date_utils.month_name(month)} {YEAR}"
+
+column_headers = ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
+
 data = [
-    ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'],
-    ['',    '',    '',    '',      '',    '1',   '2'],
-    ['3',   '4',   '5',   '6',     '7',   '8',   '9'],
-    ['10',  '11',  '12',  '13',    '14',  '15',  '16'],
-    ['17',  '18',  '19',  '20',    '21',  '22',  '23'],
-    ['24',  '25',  '26',  '27',    '28',  '29',  '30'],
-    ['31',  '',    '',    '',      '',    '',    '']
+    # ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'],
 ]
 
-# Pop the headers from the data array
-column_headers = data.pop(0)
+# Generate the calendar data for the month
+days_in_month = date_utils.days_in_month(YEAR, month)
+
+row = None
+for day_of_month in range(1, days_in_month + 1):
+    weekday = date_utils.weekday_zero_is_monday(YEAR, month, day_of_month)
+    # First row needs fillers:
+    if (row == None):
+        row = [''] * weekday
+    row.append(str(day_of_month))
+    if(weekday == 6):
+        data.append(row)
+        row = []
+
+if (weekday < 6):
+    data.append(row)
+
+while(len(row) < 7):
+    row.append('')
 
 # note: Table data needs to be non-numeric text.
 cell_text = data
@@ -57,7 +79,7 @@ ax.get_yaxis().set_visible(False)
 # Hide axes border
 plt.box(on=None)
 
-plt.suptitle(TITLE_TEXT)
+plt.suptitle(title_text)
 
 # Force the figure to update, so backends center objects correctly within the figure.
 # Without plt.draw() here, the title will center on the axes and not the figure.
