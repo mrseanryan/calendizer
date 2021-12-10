@@ -4,6 +4,8 @@ Generates images of calendar month tables and can paste them onto suitable photo
 
 A quick way to make your own calendar for printing.
 
+![Robin in April](exampleImages/2022-04-April--P1180988-robin.small.jpg "A robin in April")
+
 ## Usage
 
 To generate 12 images of a mini calendar:
@@ -44,3 +46,7 @@ pip install -r pip.config
 ## References
 
 https://towardsdatascience.com/simple-little-tables-with-matplotlib-9780ef5d0bc4
+
+# license
+
+License is [MIT](./LICENSE)
