@@ -1,3 +1,5 @@
+@ECHO OFF
+
 SETLOCAL
 
 SET _IMAGE=temp\pyplot-table-demo.png
