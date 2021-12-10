@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def render(cell_text, column_headers, title_text, edge_color, dpi, outpath):
+def render(cell_text, column_headers, title_text, border_color, dpi, outpath):
     # Get some lists of color specs for column headers
     ccolors = plt.cm.BuPu(np.full(len(column_headers), 0.1))
 
@@ -9,7 +9,6 @@ def render(cell_text, column_headers, title_text, edge_color, dpi, outpath):
     # seems to better regulate white space. Sometimes experimenting
     # with an explicit figsize here can produce better outcome.
     plt.figure(linewidth=2,
-            edgecolor=edge_color,
             tight_layout={'pad': 0.1},
             figsize=(3, 2)
             )
@@ -19,7 +18,7 @@ def render(cell_text, column_headers, title_text, edge_color, dpi, outpath):
                         colColours=ccolors,
                         colLabels=column_headers,
                         loc='center')
-    # TODO set the border color of the table cells
+    # TODO set the border color of the table cells - border_color
 
     # Scaling is the only influence we have over top and bottom cell padding.
     # Make the rows taller (i.e., make cell y scale larger).
