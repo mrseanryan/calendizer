@@ -7,6 +7,7 @@ The options are:
 [-b --bordercolor - The color of the table borders]
 [--dpi] - DPI to render
 [-h --help]
+[-t --textColor - The color of the text]
 
 Examples:
 render_calendar_tables.py 2022 temp
@@ -21,16 +22,21 @@ import _date_utils
 import _figure_renderer
 
 # usage() - prints out the usage text, from the top of this file :-)
+
+
 def usage():
     print(__doc__)
+
 
 # optparse - parse the args
 parser = OptionParser(
     usage='%prog <source month 1..12> [options]')
-parser.add_option('-b', '--bordercolor', dest='bordercolor', default="black",
+parser.add_option('-b', '--borderColor', dest='borderColor', default="black",
                   help="The color of the table borders - for example black or red or blue")
 parser.add_option('--dpi', dest='dpi', default=150,
                   help="The DPI to render (Dots Per Inch). Defaults to 150")
+parser.add_option('-t', '--textColor', dest='textColor', default="black",
+                  help="The color of the text - for example black or red or blue")
 
 (options, args) = parser.parse_args()
 if (len(args) != 2):
@@ -40,14 +46,12 @@ if (len(args) != 2):
 YEAR = int(args[0])
 OUTDIR = args[1]
 
-DPI = options.dpi
-BORDER_COLOR = options.bordercolor
-
 # 1 = January
 for month in range(1, 12 + 1):
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
 
-    image_file_path = _figure_renderer.render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI)
+    image_file_path = _figure_renderer.render_table_for_month(
+        month, YEAR, OUTDIR, options.borderColor, options.textColor, options.dpi)
     print(f" - saved to {image_file_path} [OK]")
 
 print("[done]")

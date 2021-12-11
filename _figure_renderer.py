@@ -5,7 +5,8 @@ import os
 import _calendar_model
 import _date_utils
 
-def render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI):
+
+def render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, FONT_COLOR, DPI):
 
     # note: Table data needs to be non-numeric text.
     cell_text = _calendar_model.get_month_data(month, YEAR)
@@ -15,12 +16,15 @@ def render_table_for_month(month, YEAR, OUTDIR, BORDER_COLOR, DPI):
     title_text = _calendar_model.get_month_title(month, YEAR)
 
     month_2_digits = f"{month:02d}"
-    outpath = os.path.join(OUTDIR, f"{YEAR}-{month_2_digits}-{_date_utils.month_name(month)}.png")
+    outpath = os.path.join(
+        OUTDIR, f"{YEAR}-{month_2_digits}-{_date_utils.month_name(month)}.png")
 
-    render(cell_text, column_headers, title_text, BORDER_COLOR, DPI, outpath)
+    render(cell_text, column_headers, title_text,
+           BORDER_COLOR, FONT_COLOR, DPI, outpath)
     return outpath
 
-def render(cell_text, column_headers, title_text, border_color, dpi, outpath):
+
+def render(cell_text, column_headers, title_text, border_color, font_color, dpi, outpath):
     # Get some lists of color specs for column headers
     ccolors = plt.cm.BuPu(np.full(len(column_headers), 0.1))
 
@@ -28,17 +32,24 @@ def render(cell_text, column_headers, title_text, border_color, dpi, outpath):
     # seems to better regulate white space. Sometimes experimenting
     # with an explicit figsize here can produce better outcome.
     plt.figure(linewidth=2,
-            tight_layout={'pad': 0.1},
-            figsize=(3, 2),
-            edgecolor=border_color
-            )
+               tight_layout={'pad': 0.1},
+               figsize=(3, 2),
+               edgecolor=border_color
+               )
     # Add a table at the bottom of the axes
     the_table = plt.table(cellText=cell_text,
-                        rowLoc='right',
-                        colColours=ccolors,
-                        colLabels=column_headers,
-                        loc='center')
-    # TODO set the border color of the table cells - border_color
+                          rowLoc='right',
+                          colColours=ccolors,
+                          colLabels=column_headers,
+                          loc='center')
+
+    # Configure the cells
+    # table_props = the_table.properties()
+    table_cells = the_table.get_children()  # table_props['child_artists']
+    for cell in table_cells:
+        # cell.get_text().set_fontsize(20)
+        cell.get_text().set_color(font_color)
+        cell.set(edgecolor=border_color)
 
     # Scaling is the only influence we have over top and bottom cell padding.
     # Make the rows taller (i.e., make cell y scale larger).
@@ -52,7 +63,7 @@ def render(cell_text, column_headers, title_text, border_color, dpi, outpath):
     # Hide axes border
     plt.box(on=None)
 
-    plt.suptitle(title_text)
+    plt.suptitle(title_text, color=font_color)
 
     # Force the figure to update, so backends center objects correctly within the figure.
     # Without plt.draw() here, the title will center on the axes and not the figure.

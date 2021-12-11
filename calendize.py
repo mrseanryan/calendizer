@@ -10,6 +10,7 @@ The options are:
 [--dpi] - DPI to render
 [-h --help]
 [-r --right - The right margin of the calendar]
+[-t --textColor - The color of the text]
 
 Examples:
 calendize.py 2022 my-12-images temp
@@ -44,6 +45,8 @@ parser.add_option('-c', '--borderColor', dest='borderColor', default="black",
                   help="The color of the table borders - for example black or red or blue")
 parser.add_option('--dpi', dest='dpi', default=150,
                   help="The DPI to render (Dots Per Inch). Defaults to 150")
+parser.add_option('-t', '--textColor', dest='textColor', default="black",
+                  help="The color of the text - for example black or red or blue")
 parser.add_option('-r', '--right', dest='right_margin', default=50,
                   help="The right margin of the calendar. Defaults to 50")
 
@@ -110,7 +113,7 @@ Path(OUTDIR).mkdir(parents=True, exist_ok=True)
 for month in range(1, 12 + 1):
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
     calendar_image_file_path = _figure_renderer.render_table_for_month(
-        month, YEAR, OUTDIR, options.borderColor, int(options.dpi))
+        month, YEAR, OUTDIR, options.borderColor, options.textColor, int(options.dpi))
     input_image_path = files[month - 1]
     output_image_path = os.path.join(
         OUTDIR, generate_output_image_filename(input_image_path, month, YEAR))
