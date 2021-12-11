@@ -5,6 +5,7 @@ Usage: calendize.py <year> <path to input images> <path to output directory> [op
 
 The options are:
 
+[-a --alpha - The transparency of the calendar (0..1)]
 [-b --bottom - The bottom margin of the calendar]
 [-c --borderColor - The color of the table borders]
 [--dpi] - DPI to render
@@ -16,7 +17,7 @@ Examples:
 calendize.py 2022 my-12-images temp
 calendize.py 2022 my-12-images temp --dpi 150
 calendize.py 2022 my-12-images temp --dpi 150 -b blue
-calendize.py 2022 my-12-images temp --dpi 150 --borderColor blue
+calendize.py 2022 my-12-images temp --dpi 150 --borderColor blue --alpha 0.7
 """
 from PIL import Image
 from os.path import isfile, join
@@ -39,6 +40,8 @@ def usage():
 # optparse - parse the args
 parser = OptionParser(
     usage='%prog <source month 1..12> [options]')
+parser.add_option('-a', '--alpha', dest='alpha', default=1.0,
+                  help="The transparency of the calendar (0..1). Defaults to 1 (fully opaque).")
 parser.add_option('-b', '--bottom', dest='bottom_margin', default=50,
                   help="The bottom margin of the calendar. Defaults to 50")
 parser.add_option('-c', '--borderColor', dest='borderColor', default="black",
@@ -83,11 +86,20 @@ def calculate_bottom_right_offset_for(calender_image, background_image, bottom_m
     return margin_tuple_from_topleft
 
 
-def paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path, bottom_margin, right_margin):
+def paste_with_transparency(fg_img, bg_img, alpha=1.0, box=(0, 0)):
+    fg_img_trans = Image.new("RGBA", fg_img.size)
+    fg_img_trans = Image.blend(fg_img_trans, fg_img, alpha)
+    bg_img.paste(fg_img_trans, box, fg_img_trans)
+    return bg_img
+
+
+def paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path, bottom_margin, right_margin, alpha):
     calender_image = Image.open(calendar_image_file_path)
     background_image = Image.open(input_image_path)
-    background_image.paste(calender_image, calculate_bottom_right_offset_for(
-        calender_image, background_image, bottom_margin, right_margin))
+    offset = calculate_bottom_right_offset_for(
+        calender_image, background_image, bottom_margin, right_margin)
+    background_image = paste_with_transparency(
+        calender_image, background_image, alpha, offset)
     background_image.save(output_image_path)
 
 
@@ -118,7 +130,7 @@ for month in range(1, 12 + 1):
     output_image_path = os.path.join(
         OUTDIR, generate_output_image_filename(input_image_path, month, YEAR))
     paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path, int(
-        options.bottom_margin), int(options.right_margin))
+        options.bottom_margin), int(options.right_margin), float(options.alpha))
     os.unlink(calendar_image_file_path)
     print(f" - calendized image saved to {output_image_path} [OK]")
 
