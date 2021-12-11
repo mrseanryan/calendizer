@@ -20,7 +20,7 @@ To take 12 images and use them to create a calendar:
 
 With an input image of size 4000 x 3000, these settings seem to work well:
 
-`--dpi 450 -b 100 -r 100`
+`--dpi 400 -b 100 -r 100 -a 0.8`
 
 Example:
 
