@@ -33,7 +33,7 @@ def render(cell_text, column_headers, title_text, border_color, font_color, dpi,
     # with an explicit figsize here can produce better outcome.
     plt.figure(linewidth=2,
                tight_layout={'pad': 0.1},
-               figsize=(3, 2),
+               figsize=(3, 1.55),
                edgecolor=border_color
                )
     # Add a table at the bottom of the axes
