@@ -16,11 +16,23 @@ To take 12 images and use them to create a calendar:
 
 `calendize.py <year> <path to directory with 12 images in PNG or JPEG format> <path to output directory>`
 
+For a full list of options, just type the relevant command:
+
+`render_calendar_tables.py`
+
+`calendize.py`
+
 ### Tips
 
 With an input image of size 4000 x 3000, these settings seem to work well:
 
-`--dpi 400 -b 100 -r 100 -a 0.8`
+`--dpi 400 -b 100 -r 100`
+
+There is an alpha (transparency) option:
+
+`-a 0.8`
+
+but printing on a small size like 2L or A5 looks better with the default opaque setting.
 
 Example:
 
