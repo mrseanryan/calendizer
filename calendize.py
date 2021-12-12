@@ -10,6 +10,7 @@ The options are:
 [-c --borderColor - The color of the table borders]
 [--dpi] - DPI to render
 [-h --help]
+[-m --month - Output for one month only (1..12)]
 [-r --right - The right margin of the calendar]
 [-t --textColor - The color of the text]
 
@@ -48,6 +49,8 @@ parser.add_option('-c', '--borderColor', dest='borderColor', default="black",
                   help="The color of the table borders - for example black or red or blue")
 parser.add_option('--dpi', dest='dpi', default=150,
                   help="The DPI to render (Dots Per Inch). Defaults to 150")
+parser.add_option('-m', '--month', dest='month', default=-1,
+                  help="Output for one month only (1..12)")
 parser.add_option('-t', '--textColor', dest='textColor', default="black",
                   help="The color of the text - for example black or red or blue")
 parser.add_option('-r', '--right', dest='right_margin', default=50,
@@ -121,8 +124,9 @@ if (files_count != 12):
 
 Path(OUTDIR).mkdir(parents=True, exist_ok=True)
 
-# 1 = January
-for month in range(1, 12 + 1):
+
+def generate_for_month(month):
+    # month: 1 = January
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
     calendar_image_file_path = _figure_renderer.render_table_for_month(
         month, YEAR, OUTDIR, options.borderColor, options.textColor, int(options.dpi))
@@ -133,5 +137,12 @@ for month in range(1, 12 + 1):
         options.bottom_margin), int(options.right_margin), float(options.alpha))
     os.unlink(calendar_image_file_path)
     print(f" - calendized image saved to {output_image_path} [OK]")
+
+
+if (int(options.month) >= 1):
+    generate_for_month(int(options.month))
+else:
+    for month in range(1, 12 + 1):
+        generate_for_month(month)
 
 print("[done]")
