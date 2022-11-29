@@ -26,7 +26,11 @@ For a full list of options, just type the relevant command:
 
 With an input image of size 4000 x 3000, these settings seem to work well:
 
-`--dpi 400 -b 100 -r 100`
+`--dpi 450 -b 100 -r 100`
+
+A larger 'full frame' input image of size 6000 x 4000 works well with:
+
+`--dpi 600 -b 150 -r 150`
 
 There is an alpha (transparency) option:
 
