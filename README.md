@@ -28,9 +28,14 @@ With an input image of size 4000 x 3000, these settings seem to work well:
 
 `--dpi 450 -b 100 -r 100`
 
-A larger 'full frame' input image of size 6000 x 4000 works well with:
+Settings for other image sizes:
 
-`--dpi 600 -b 150 -r 150`
+| Image size               | Settings                  |
+| ------------------------ | ------------------------- |
+| 6000 x 4000 'full frame' | `--dpi 600 -b 150 -r 150` |
+| 4000 x 2700              | `--dpi 400 -b 80 -r 80`   |
+| 2500 x 1800              | `--dpi 250 -b 40 -r 40`   |
+| 2300 x 1500              | `--dpi 250 -b 40 -r 40 `  |
 
 There is an alpha (transparency) option:
 
