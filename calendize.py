@@ -1,5 +1,5 @@
 """
-Takes 12 images and outputs copies that have calender-month table pasted onto them.
+Takes 12 images and outputs copies that each have a calender-month table pasted onto them.
 
 Usage: calendize.py <year> <path to input images> <path to output directory> [options]
 
