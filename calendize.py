@@ -6,13 +6,14 @@ Usage: calendize.py <year> <path to input images> <path to output directory> [op
 The options are:
 
 [-a --alpha - The transparency of the calendar (0..1)]
-[-b --bottom - The bottom margin of the calendar]
+[-b --bottom - The bottom margin of the calendar (by default is auto-calculated)]
 [-c --borderColor - The color of the table borders]
-[--dpi] - DPI to render
+[--dpi] - DPI to render (by default is auto-calculated from the image size)
 [-h --help]
 [-m --month - Output for one month only (1..12)]
-[-r --right - The right margin of the calendar]
+[-r --right - The right margin of the calendar (by default is auto-calculated)]
 [-t --textColor - The color of the text]
+[-v --verbose - Verbose output]
 
 Examples:
 calendize.py 2022 my-12-images temp
@@ -30,6 +31,7 @@ from pathlib import Path
 
 import _date_utils
 import _figure_renderer
+import service_auto_dpi_calculator
 
 # usage() - prints out the usage text, from the top of this file :-)
 
@@ -40,21 +42,25 @@ def usage():
 
 # optparse - parse the args
 parser = OptionParser(
-    usage='%prog <source month 1..12> [options]')
+    usage=__doc__)
 parser.add_option('-a', '--alpha', dest='alpha', default=1.0,
                   help="The transparency of the calendar (0..1). Defaults to 1 (fully opaque).")
 parser.add_option('-b', '--bottom', dest='bottom_margin', default=50,
-                  help="The bottom margin of the calendar. Defaults to 50")
+                  help="The bottom margin of the calendar. By default is auto-calculated.")
 parser.add_option('-c', '--borderColor', dest='borderColor', default="black",
                   help="The color of the table borders - for example black or red or blue")
-parser.add_option('--dpi', dest='dpi', default=150,
-                  help="The DPI to render (Dots Per Inch). Defaults to 150")
+parser.add_option('--dpi', dest='dpi', default=None,
+                  help="The DPI to render (Dots Per Inch). By default is auto-calculated for image size.")
 parser.add_option('-m', '--month', dest='month', default=-1,
                   help="Output for one month only (1..12)")
+parser.add_option('-r', '--right', dest='right_margin', default=50,
+                  help="The right margin of the calendar. By default is auto-calculated.")
 parser.add_option('-t', '--textColor', dest='textColor', default="black",
                   help="The color of the text - for example black or red or blue")
-parser.add_option('-r', '--right', dest='right_margin', default=50,
-                  help="The right margin of the calendar. Defaults to 50")
+parser.add_option('-v', '--verbose', dest='is_verbose',
+                  action='store_const',
+                  const=True, default=False,
+                  help="Turn on verbose output")
 
 (options, args) = parser.parse_args()
 if (len(args) != 3):
@@ -64,6 +70,10 @@ if (len(args) != 3):
 YEAR = int(args[0])
 INPUTDIR = args[1]
 OUTDIR = args[2]
+
+dpi_options = options.dpi
+if options.dpi is not None:
+    dpi_options = int(options.dpi)
 
 
 def is_supported_file_type(filepath):
@@ -77,6 +87,12 @@ def get_input_files(input_dir):
         join(input_dir, f)) and is_supported_file_type(f)]
     files = map((lambda f: join(input_dir, f)), files)
     return list(files)
+
+
+def get_image_dimensions(image_file_path):
+    image = Image.open(image_file_path)
+    image_width, image_height = image.size
+    return (image_width, image_height)
 
 
 def calculate_bottom_right_offset_for(calender_image, background_image, bottom_margin, right_margin):
@@ -128,13 +144,23 @@ Path(OUTDIR).mkdir(parents=True, exist_ok=True)
 def generate_for_month(month):
     # month: 1 = January
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
-    calendar_image_file_path = _figure_renderer.render_table_for_month(
-        month, YEAR, OUTDIR, options.borderColor, options.textColor, int(options.dpi))
+
     input_image_path = files[month - 1]
+
+    input_width, input_height = get_image_dimensions(input_image_path)
+    dpi_and_margins = service_auto_dpi_calculator.DpiAndMargins(
+        dpi_options, int(options.bottom_margin), int(options.right_margin))
+    if (options.dpi is None):
+        dpi_and_margins = service_auto_dpi_calculator.calculate_dpi_and_margins_from_image_size(
+            input_width,  input_height, options.is_verbose)
+
+    calendar_image_file_path = _figure_renderer.render_table_for_month(
+        month, YEAR, OUTDIR, options.borderColor, options.textColor, dpi_and_margins.dpi)
+
     output_image_path = os.path.join(
         OUTDIR, generate_output_image_filename(input_image_path, month, YEAR))
-    paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path, int(
-        options.bottom_margin), int(options.right_margin), float(options.alpha))
+    paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path,
+                              dpi_and_margins.bottom_margin, dpi_and_margins.right_margin, float(options.alpha))
     os.unlink(calendar_image_file_path)
     print(f" - calendized image saved to {output_image_path} [OK]")
 

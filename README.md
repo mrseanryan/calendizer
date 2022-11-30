@@ -24,6 +24,11 @@ For a full list of options, just type the relevant command:
 
 ### Tips
 
+By default, **calendizer** tries to auto-calculate the DPI and margins.
+It uses the table in [CSV format](image_sizes.csv.config) to perform the calculation.
+
+Via the `--dpi` option, you can override this calculation.
+
 With an input image of size 4000 x 3000, these settings seem to work well:
 
 `--dpi 450 -b 100 -r 100`
