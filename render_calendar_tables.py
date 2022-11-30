@@ -30,7 +30,7 @@ def usage():
 
 # optparse - parse the args
 parser = OptionParser(
-    usage='%prog <source month 1..12> [options]')
+    usage=__doc__)
 parser.add_option('-b', '--borderColor', dest='borderColor', default="black",
                   help="The color of the table borders - for example black or red or blue")
 parser.add_option('--dpi', dest='dpi', default=150,
@@ -51,7 +51,7 @@ for month in range(1, 12 + 1):
     print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
 
     image_file_path = _figure_renderer.render_table_for_month(
-        month, YEAR, OUTDIR, options.borderColor, options.textColor, options.dpi)
+        month, YEAR, OUTDIR, options.borderColor, options.textColor, int(options.dpi))
     print(f" - saved to {image_file_path} [OK]")
 
 print("[done]")
