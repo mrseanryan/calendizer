@@ -141,18 +141,23 @@ if (files_count != 12):
 Path(OUTDIR).mkdir(parents=True, exist_ok=True)
 
 
-def generate_for_month(month):
-    # month: 1 = January
-    print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
-
-    input_image_path = files[month - 1]
-
+def calculate_dpi_and_margins(input_image_path):
     input_width, input_height = get_image_dimensions(input_image_path)
     dpi_and_margins = service_auto_dpi_calculator.DpiAndMargins(
         dpi_options, int(options.bottom_margin), int(options.right_margin))
     if (options.dpi is None):
         dpi_and_margins = service_auto_dpi_calculator.calculate_dpi_and_margins_from_image_size(
             input_width,  input_height, options.is_verbose)
+    return dpi_and_margins
+
+
+def generate_for_month(month):
+    # month: 1 = January
+    print(f"Generating {_date_utils.month_name(month)} {YEAR} ...")
+
+    input_image_path = files[month - 1]
+
+    dpi_and_margins = calculate_dpi_and_margins(input_image_path)
 
     calendar_image_file_path = _figure_renderer.render_table_for_month(
         month, YEAR, OUTDIR, options.borderColor, options.textColor, dpi_and_margins.dpi)

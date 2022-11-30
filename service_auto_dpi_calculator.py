@@ -12,6 +12,7 @@ class DpiAndMargins:
 
 
 def _calculate_distance(x1, y1, x2, y2):
+    # sadly, we need to use abs() here (!)
     return abs((x1 - x2) ^ 2) + abs((y1 - y2) ^ 2)
 
 
