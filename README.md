@@ -1,10 +1,23 @@
 # :calendar: calendizer README
 
-Generates images of calendar month tables and can paste them onto suitable photos.
+Calendizer is a simple Python command line tool that generates a set of calendar-month tables and pastes them onto a given set of 12 photos.
 
 A quick way to make your own calendar for printing.
 
 ![Robin in April](exampleImages/2022-04-April--P1180988-robin.small.jpg "A robin in April")
+
+## Why calendizer and self-printing
+
+Self-printing has several advantages over online/order printing:
+
+- you can iterate several test-prints to get things just right
+- often images print slightly darker than on-screen, and self-printing allows you to adjust for that
+- no waiting about for the post!
+- depending on your printer and the volume, it can be cheaper
+
+The size and position of the calendar-table is fully configurable for each month.
+
+This allows for self-printing calendars in a timely manner.
 
 ## Usage
 
