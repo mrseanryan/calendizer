@@ -12,12 +12,11 @@ class DpiAndMargins:
 
 
 def _calculate_distance(x1, y1, x2, y2):
-    # sadly, we need to use abs() here (!)
-    return abs((x1 - x2) ^ 2) + abs((y1 - y2) ^ 2)
+    return pow(x1 - x2, 2) + pow(y1 - y2, 2)
 
 
-def calculate_dpi_and_margins_from_image_size(width, height, is_verbose) -> DpiAndMargins:
-    image_sizes = service_image_sizes_reader.get_image_sizes_config()
+def calculate_dpi_and_margins_from_image_size(width, height, is_verbose, get_image_sizes_config=service_image_sizes_reader.get_image_sizes_config) -> DpiAndMargins:
+    image_sizes = get_image_sizes_config()
     min_distance = 10000000
     closest_image_size = image_sizes[0]
     for i in range(0, len(image_sizes)):
