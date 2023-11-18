@@ -9,6 +9,7 @@ The options are:
 [-b --bottom - The bottom margin of the calendar (by default is auto-calculated)]
 [-c --borderColor - The color of the table borders]
 [--dpi] - DPI to render (by default is auto-calculated from the image size)
+[-f --fliphoriz - Flip the image horizontally (left to right)]
 [-h --help]
 [-m --month - Output for one month only (1..12)]
 [-r --right - The right margin of the calendar (by default is auto-calculated)]
@@ -49,6 +50,10 @@ parser.add_option('-b', '--bottom', dest='bottom_margin', default=50,
                   help="The bottom margin of the calendar. By default is auto-calculated.")
 parser.add_option('-c', '--borderColor', dest='borderColor', default="black",
                   help="The color of the table borders - for example black or red or blue")
+parser.add_option('-f', '--fliphoriz', dest='is_flipped_horiz',
+                  action='store_const',
+                  const=True, default=False,
+                  help="Flip the image horizontally (left to right)")
 parser.add_option('--dpi', dest='dpi', default=None,
                   help="The DPI to render (Dots Per Inch). By default is auto-calculated for image size.")
 parser.add_option('-m', '--month', dest='month', default=-1,
@@ -112,9 +117,11 @@ def paste_with_transparency(fg_img, bg_img, alpha=1.0, box=(0, 0)):
     return bg_img
 
 
-def paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path, bottom_margin, right_margin, alpha):
+def paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path, bottom_margin, right_margin, alpha, is_flipped_horiz):
     calender_image = Image.open(calendar_image_file_path)
     background_image = Image.open(input_image_path)
+    if is_flipped_horiz:
+        background_image = background_image.transpose(Image.FLIP_LEFT_RIGHT)
     offset = calculate_bottom_right_offset_for(
         calender_image, background_image, bottom_margin, right_margin)
     background_image = paste_with_transparency(
@@ -165,7 +172,7 @@ def generate_for_month(month):
     output_image_path = os.path.join(
         OUTDIR, generate_output_image_filename(input_image_path, month, YEAR))
     paste_calendar_into_image(calendar_image_file_path, input_image_path, output_image_path,
-                              dpi_and_margins.bottom_margin, dpi_and_margins.right_margin, float(options.alpha))
+                              dpi_and_margins.bottom_margin, dpi_and_margins.right_margin, float(options.alpha), options.is_flipped_horiz)
     os.unlink(calendar_image_file_path)
     print(f" - calendized image saved to {output_image_path} [OK]")
 
