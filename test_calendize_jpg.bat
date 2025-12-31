@@ -2,6 +2,6 @@
 
 del .\temp\*.png
 
-python calendize.py 2022 testImages\jpg  .\temp
+uv run python calendize.py 2022 testImages\jpg  .\temp
 
 explorer .\temp

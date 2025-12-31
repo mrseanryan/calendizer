@@ -1,3 +1,3 @@
-python calendize.py
+uv run python calendize.py
 
-python render_calendar_tables.py 
+uv run python render_calendar_tables.py

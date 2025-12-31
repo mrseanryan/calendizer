@@ -1,1 +1,1 @@
-python -m unittest test_target_date_calculator
+uv run python -m unittest test_service_auto_dpi_calculator

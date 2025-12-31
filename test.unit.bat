@@ -1,1 +1,1 @@
-python -m unittest  
+uv run python -m unittest  

@@ -23,17 +23,17 @@ This allows for self-printing calendars in a timely manner.
 
 To generate 12 images of a mini calendar:
 
-`python render_calendar_tables.py <year> <path to output directory>`
+`uv run python render_calendar_tables.py <year> <path to output directory>`
 
 To take 12 images and use them to create a calendar:
 
-`python calendize.py <year> <path to directory with 12 images in PNG or JPEG format> <path to output directory>`
+`uv run python calendize.py <year> <path to directory with 12 images in PNG or JPEG format> <path to output directory>`
 
 For a full list of options, just type the relevant command:
 
-`python render_calendar_tables.py`
+`uv run python render_calendar_tables.py`
 
-`python calendize.py`
+`uv run python calendize.py`
 
 ### Tips
 
@@ -68,7 +68,7 @@ Example:
 
 ## Dependencies
 
-- Python 3.x
+- Python 3.7.x
 
 ## Setup
 
@@ -77,10 +77,24 @@ Example:
 - Python 3.7.9 or later
 - pip 20.2.2 or later
 
-2. Install dependencies
+Via pyenv:
 
 ```
-pip install -r pip.config
+pyenv install 3.7.9
+pyenv local 3.7.9
+```
+
+2. Install uv
+
+```
+pip install uv
+```
+
+3. Install dependencies
+
+```
+uv venv --python 3.7
+uv sync
 ```
 
 ## References
