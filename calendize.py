@@ -40,13 +40,15 @@ import service_auto_dpi_calculator
 def usage():
     print(__doc__)
 
+DEFAULT_BOTTOM_MARGIN = 50
+DEFAULT_RIGHT_MARGIN = 50
 
 # optparse - parse the args
 parser = OptionParser(
     usage=__doc__)
 parser.add_option('-a', '--alpha', dest='alpha', default=1.0,
                   help="The transparency of the calendar (0..1). Defaults to 1 (fully opaque).")
-parser.add_option('-b', '--bottom', dest='bottom_margin', default=50,
+parser.add_option('-b', '--bottom', dest='bottom_margin', default=DEFAULT_BOTTOM_MARGIN,
                   help="The bottom margin of the calendar. By default is auto-calculated.")
 parser.add_option('-c', '--borderColor', dest='borderColor', default="black",
                   help="The color of the table borders - for example black or red or blue")
@@ -58,7 +60,7 @@ parser.add_option('--dpi', dest='dpi', default=None,
                   help="The DPI to render (Dots Per Inch). By default is auto-calculated for image size.")
 parser.add_option('-m', '--month', dest='month', default=-1,
                   help="Output for one month only (1..12)")
-parser.add_option('-r', '--right', dest='right_margin', default=50,
+parser.add_option('-r', '--right', dest='right_margin', default=DEFAULT_RIGHT_MARGIN,
                   help="The right margin of the calendar. By default is auto-calculated.")
 parser.add_option('-t', '--textColor', dest='textColor', default="black",
                   help="The color of the text - for example black or red or blue")
@@ -79,6 +81,12 @@ OUTDIR = args[2]
 dpi_options = options.dpi
 if options.dpi is not None:
     dpi_options = int(options.dpi)
+
+
+if not options.dpi and (options.bottom_margin != DEFAULT_BOTTOM_MARGIN or options.right_margin != DEFAULT_RIGHT_MARGIN):
+    print(
+        "Custom margins can only be specified if the --dpi option is also set.")
+    exit(3)
 
 
 def is_supported_file_type(filepath):
