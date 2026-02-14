@@ -72,28 +72,17 @@ Example:
 
 ## Setup
 
-1. Install Python 3.7.x and pip
-
-- Python 3.7.9 or later
-- pip 20.2.2 or later
-
-Via pyenv:
-
-```
-pyenv install 3.7.9
-pyenv local 3.7.9
-```
-
-2. Install uv
+1. Install uv
 
 ```
 pip install uv
 ```
 
-3. Install dependencies
+2. Install dependencies
 
 ```
-uv venv --python 3.7
+uv python install 3.11
+uv venv --python 3.11
 uv sync
 ```
 
